@@ -1,0 +1,33 @@
+server: 
+  port: 9010
+  
+spring: 
+  application: 
+    name: "message"
+  cloud:
+    function: 
+      definition: email|sms                 #function name defined in MSGFunct
+    stream: 
+      bindings:
+        emailsms-in-0:                                #in-input binding, 0-start index val, binding name. This works on top  of  function.definition(email|sms)
+          destination:
+            send-communication                          #Q- to - functions (Q name for RMQ), Topics for Kafka
+          group: ${spring.application.name}             #to uniqely identify
+
+        emailsms-out-0:                                #onput binding(Not used)
+          destination: communication-sent             #Q- to - functions (Q name)
+      kafka: 
+        binder: 
+          brokers: 
+            - localhost:9092
+
+#FOR AMQ, whenever we are using output binding, the destination is going to be the exchange.
+#Whereas whenever we are using input binding like we did inside the accounts microservice, the destination
+#is going to be the queue name.
+
+#  rabbitmq:
+#    host: localhost 
+#    port: 5672 
+#    username: guest 
+#    password: guest 
+#    connection-timeout: 10s 

@@ -1,0 +1,62 @@
+spring: 
+  application: 
+    name: "eurekaserver"
+  config: 
+    import: "optional:configserver:http://localhost:8071/"
+
+eureka: 
+  instance: 
+    leaase-renewal-interval-in-seconds: 30
+#default value 30s. Eureka Server is going to expect the heartbeat signals from the client microservices for every 30s
+    lease-expiration-duration-in-seconds: 90
+#default 90s. Eureka server is going to wait a maximum of 90s to receive a heartbeat signal from a particular microservice instance. Within this 90s, 
+#If it is not going to receive the heartbeat, then it can evict the instance from the service registry.
+  server: 
+    eviction-interval-timer-in-ms: 60000
+#60*1000-milliseconds, and the default value here is 60*1000 milliseconds.
+#With that the total value will be 60s.
+#So the purpose of this property is, like I said, the Eureka server is going to evict the unhealthy
+#service details from the service registry and this is not going to happen
+#every second there is going to be a scheduler which will run behind the scenes and we can set the frequency
+#for this scheduler. So by default, this scheduler is going to run every 60s.
+#So whenever it is trying to run this task, it will check if the self-preservation mode is activated
+#or not. If it is not activated, then it will perform the eviction process.
+#If the self-preservation mode is activated, then it will not do any further evictions from the serv
+
+    renewal-percent-threshold: 0.85
+#    So this property and its value is used to calculate the expected percentage of heartbeats per minute
+#Eureka is expecting. If my Eureka did not receive at least a minimum 85% of the heartbeats from the instances, then it is
+#going to enter into the Self-preservation mode. And here you may have a question like how my Eureka server will know what are the total number of heartbeats
+#that it is going to expect. Maybe during the startup of the Eureka Server, we may have total ten instances of microservices running
+#and with ten instances my Eureka server will expect at least nine instances to send the heartbeat signal.
+#But later on after one hour, we may onboard 20 more instances.
+#So how my Eureka server will know how to calculate these correct threshold heartbeats that it is going
+#to expect.The answer for this question is the next property.
+
+    eureka-server-renewal-threshold-update-interval-ms: 900000
+#15*60*1000 - a scheduler will run behind the scenes to calculate the expected total number of heartbeats that my
+#Eureka server should expect per minute. And by default, this scheduler is going to run for every 15 minutes.
+#So every 15 minutes this task will run behind the scenes and my Eureka server will know what are the
+#total number of heartbeats that it should expect and based upon the total value, it is going to calculate
+#the threshold value and based upon the threshold value, it is going to activate the self-preservation
+#mode. For some reason, if your project don't like the self-preservation mode of Eureka Server, you can permanently
+#disable it by using the last property, and this property by default will have true value.
+#If you want to disable the self-preservation mode, please set this property with the value false.
+#When you disable the self-preservation mode and if your microservice network has a network glitch, then service details will be deleted from rservice registry
+    
+    enable-self-preservation: true
+
+management: 
+  endpoints: 
+    web: 
+      exposure: 
+        include: "*"
+  health: 
+    readiness-state: 
+      enabled: true
+    liveness-state: 
+      enabled: true
+  endpoint: 
+    health: 
+      probes: 
+        enabled: true

@@ -1,0 +1,118 @@
+server:
+  port: 9000
+    
+spring:
+  application:
+    name: "cards-1"
+  profiles:
+    active: "prod"
+    
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true  
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    username: root
+#    #url: jdbc:mysql://localhost:3306/ms_accounts?createDatabaseIfNotExist=true
+#    url: jdbc:mysql://localhost:3309/cardsdb?createDatabaseIfNotExist=true #Docker
+#    password: root
+#  jpa:
+#    properies:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    sql: 
+#      init: 
+#        mode: always
+        
+  config:                                                         # this should comment when use docker compose
+    import: "configserver:http://localhost:8071/"
+
+#commented for docker
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"  
+  
+#  config:
+#    import:
+#      - "application_qa.yml"
+#      - "application_prod.yml"
+#  profiles:
+#    active:
+#      - "qa"
+
+#Actuator 
+management: 
+  endpoints: 
+    web: 
+      exposure: 
+        include: "*"
+  health:  
+    readiness-state: 
+      enabled: true
+    liveness-state: 
+      enabled: true
+      
+  endpoint: 
+    shutdown: 
+      enabled: true		
+    health: 
+      probes: 
+        enabled: true
+  info: 
+    env: 
+      enabled: true        
+
+endpoints:  
+  shutdown: 
+    enabled: true	
+
+eureka:  
+  instance: 
+    preferIpAddress: true #register with ip address instead of dns
+  client:   
+    fetchRegistry: true                  
+    registerWithEureka: true
+    serviceUrl: 
+      defaultZone: http://localhost:8070/eureka/
+
+info: 
+  app: 
+    name: "cards-1"
+    description: "Jagan Microservice cards_1 App"
+    version: "1.0.0"
+
+#build:
+#  version: "3.0"
+  
+#cards:
+#  message: "Welcome to EazyBank Cards related local APIs "
+#  contactDetails:
+#    name: "John Doe - Developer Cards"
+#    email: "johnCards@eazybank.com"
+#  onCallSupport:
+#    - (555) 555-9889
+#    - (555) 523-6786
+
+logging: 
+  level: 
+    com: 
+      example: 
+        cards_1: DEBUG
