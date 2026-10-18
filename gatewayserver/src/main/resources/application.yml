@@ -61,10 +61,6 @@ resilience4j.circuitbreaker:
       permittedNumberOfCallsInHalfOpenState: 2          #Allow 2 reqs in half Ope
       failureRateThreshold: 50                          #if at least 50% of my requests are failed, circuit breaker pattern can move to the open state from the closed state.
       waitDurationInOpenState: 10000                    #Time duration it will remain in open state before it goes to half open
-      
-
-
-.
 
 
 
