@@ -20,40 +20,60 @@ public class SecurityConfig {
 
 	/*@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
-		
-		serverHttpSecurity.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.GET).permitAll().pathMatchers("/eazybank/accounts/**")
-						
-						.hasRole("ACCOUNTS").pathMatchers("/eazybank/cards/**").hasRole("CARDS").pathMatchers("/eazybank/loans/**").hasRole("LOANS"))
-				.oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec
-						.jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));
-		serverHttpSecurity.csrf(csrfSpec -> csrfSpec.disable());
+
+        serverHttpSecurity.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.GET).permitAll().pathMatchers("/eazybank/accounts/**")
+
+                        .hasRole("ACCOUNTS").pathMatchers("/eazybank/cards/**").hasRole("CARDS").pathMatchers("/eazybank/loans/**").hasRole("LOANS"))
+                .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec
+                        .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));
+        serverHttpSecurity.csrf(csrfSpec -> csrfSpec.disable());
 		return serverHttpSecurity.build();
 	}*/
 
 	// anyExchange = all types of request
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
+
+		//serverHttpSecurity.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated())    //authenticated()) - secure, permitAll() -> public not secured
+		serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+                                .pathMatchers(HttpMethod.GET).permitAll() //This will have first priority than below ones, even though authenticated,preference for permitAll
+                                .pathMatchers("/jbmicroservice/accounts-1/**").authenticated()
+                                .pathMatchers("/jbmicroservice/cards-1/**").authenticated()
+                                .pathMatchers("/jbmicroservice/loans-1/**").authenticated()
+                            )
+                        .oauth2ResourceServer(oauth2ResourceServerSpec -> oauth2ResourceServerSpec.jwt(Customizer.withDefaults()));
 		
-		//serverHttpSecurity.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated())
-		/*serverHttpSecurity.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.GET).permitAll() //This will have first priority than below ones, even though authenticated,preference for permitAll
-																   .pathMatchers("/jbmicroservice/accounts-1/**").authenticated()
-																   .pathMatchers("/jbmicroservice/cards-1/**").authenticated()
-																   .pathMatchers("/jbmicroservice/loans-1/**").authenticated())
-														  .oauth2ResourceServer(oauth2ResourceServerSpec -> oauth2ResourceServerSpec.jwt(Customizer.withDefaults()));
-		
-		serverHttpSecurity.csrf(csrfSpec ->  csrfSpec.disable());   //Since no browsers involved, disable this protection. Otherwise all your post(), put(), delete() will fail because not handled the csrf attack.
-		return serverHttpSecurity.build();*/
+		serverHttpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable);   //Since no browsers involved, disable this protection. Otherwise all your post(), put(), delete() will fail because not handled the csrf attack.
+
+        /*serverHttpSecurity.authorizeExchange(new Customizer<ServerHttpSecurity.AuthorizeExchangeSpec>() {
+                    @Override
+                    public void customize(ServerHttpSecurity.AuthorizeExchangeSpec exchanges) {
+                        exchanges.pathMatchers(HttpMethod.GET).permitAll()
+                                .pathMatchers("/jbmicroservice/accounts-1/**").authenticated()
+                                .pathMatchers("/jbmicroservice/cards-1/**").authenticated()
+                                .pathMatchers("/jbmicroservice/loans-1/**").authenticated();
+                    }
+                })
+                .oauth2ResourceServer(new Customizer<ServerHttpSecurity.OAuth2ResourceServerSpec>() {
+                    @Override
+                    public void customize(ServerHttpSecurity.OAuth2ResourceServerSpec oauth2ResourceServerSpec) {
+                        oauth2ResourceServerSpec.jwt(Customizer.withDefaults());
+                    }
+                });*/
+
+
+		return serverHttpSecurity.build();
 
 		//With ROLE
-		serverHttpSecurity.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.GET).permitAll() //This will have first priority than below ones, even though authenticated,preference for permitAll
+		/*serverHttpSecurity.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.GET).permitAll() //This will have first priority than below ones, even though authenticated,preference for permitAll
 																   .pathMatchers("/jbmicroservice/accounts-1/**").hasRole("ACCOUNTS")
 																   .pathMatchers("/jbmicroservice/cards-1/**").hasRole("CARDS")
 																   .pathMatchers("/jbmicroservice/loans-1/**").hasRole("LOANS"))
 				          .oauth2ResourceServer(oauth2ResourceServerSpec -> oauth2ResourceServerSpec.jwt( jwtSpec -> jwtSpec.jwtAuthenticationConverter(  grantedAuthoritiesExtractor()  )));
 
-		serverHttpSecurity.csrf(csrfSpec ->  csrfSpec.disable());   //Since no browsers involved, disable this protection. Otherwise all your post(), put(), delete() will fail because not handled the csrf attack.
+		serverHttpSecurity.csrf(csrfSpec ->  csrfSpec.disable());  */ //Since no browsers involved, disable this protection. Otherwise all your post(), put(), delete() will fail because not handled the csrf attack.
 
-		return serverHttpSecurity.build();
+		//return serverHttpSecurity.build();
 	}
 
 	private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtractor() {
