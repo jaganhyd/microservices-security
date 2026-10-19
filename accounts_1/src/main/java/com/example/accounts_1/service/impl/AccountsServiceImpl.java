@@ -51,8 +51,8 @@ public class AccountsServiceImpl implements IAccountsService {
 		Accounts savedAccount = accountsRepository.save(createNewAccount(savedCustomer));
 		System.out.println();
 
-		createCardUsingFeignClient(customerDto);
-		getCardUsingRestTemplate(customerDto);
+		//createCardUsingFeignClient(customerDto);
+		//getCardUsingRestTemplate(customerDto);
 
 		//RabbitMQ/KAFKA
 		//sendCommunication(savedAccount, savedCustomer);

@@ -12,8 +12,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
-
-
+      /*"realm_access": {
+         "roles": [
+           "LOANS", -------------------------------------------------->
+           "default-roles-master",
+           "ACCOUNTS",  -------------------------------------------------->
+           "offline_access",
+           "uma_authorization",
+           "CARDS"         -------------------------------------------------->
+          ]
+      }*/
     @Override
     public Collection<GrantedAuthority> convert(Jwt source) {
 
@@ -22,9 +30,9 @@ public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedA
             return new ArrayList<>();
         }
 
-        Collection<GrantedAuthority> returnValue = ((List<String>) realmAccess
-                .get("roles")).stream()
-                .map(roleName -> "ROLE_" + roleName)
+        Collection<GrantedAuthority> returnValue = ((List<String>) realmAccess.get("roles"))
+                .stream()
+                .map(roleName -> "ROLE_" + roleName)   //----------------> ROLE_ [important]-> ROLE_CARDS
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         return returnValue;
