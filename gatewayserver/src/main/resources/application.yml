@@ -2,9 +2,12 @@ spring:
   application: 
     name: "gatewayserver-1"
 
-  config:                                   # this should comment when use docker compose
-    import: "configserver:http://localhost:8071/"
- 
+#  config:                                   # this should comment when use docker compose
+#    import: "configserver:http://localhost:8071/"
+
+  config:
+    import: "optional:configserver:${CONFIG_SERVER_URL:http://localhost:8071/}"
+
   #asking SD(eureka) to locate all individual MSs
   cloud: 
     gateway: 

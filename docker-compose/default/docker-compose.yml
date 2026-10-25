@@ -119,20 +119,10 @@ services:
       start_period: 10s
     environment: 
       SPRING_APPLICATION_NAME: "accounts-1"  #with this name ms will be registered in eureka
-      SPRING_CONFIG_IMPORT: configserver:http://configserver-ms:8071/
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_RABBITMQ_HOST: "rabbit"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-    deploy: 
-       resources:  
-         limits:  
-           memory: 700m
-    networks:  
-      - jaganMs
-#      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
-#    extends: 
-#      file: common-config.yml
-#      service: microservice-configserver-config
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
 #------------------------------------------------------------------------------
   loans:
     image: "jagan619/loans_1:v1"

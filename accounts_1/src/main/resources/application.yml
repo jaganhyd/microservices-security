@@ -50,8 +50,14 @@ spring:
 #    config:
 #      enabled: true
 #      uri: http://localhost:8071
-  config:                                                        # this should comment when use docker compose
-    import: "configserver:http://localhost:8071/"
+
+
+
+  #config:                                                        # this should comment when use docker compose
+  #  import: "configserver:http://localhost:8071/"
+
+#  config:
+#    import: "optional:configserver:${CONFIG_SERVER_URL:http://localhost:8071/}"
    
   cloud:                                                         #openfeign and circuitbreaker integration
     openfeign: 
