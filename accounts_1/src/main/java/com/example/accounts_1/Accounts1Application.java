@@ -20,4 +20,6 @@ public class Accounts1Application {
 		SpringApplication.run(Accounts1Application.class, args);
 	}
 
+
+
 }
