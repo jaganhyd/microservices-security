@@ -42,7 +42,7 @@ services:
 #        reservations:
 #          memory: 700m
 #    networks:
-#      - jaganMs
+##      - jaganMs
 
   redis:                   #for Ratelimiter
     #image: redis
