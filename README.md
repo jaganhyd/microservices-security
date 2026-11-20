@@ -37,7 +37,7 @@ An enterprise-grade, security-hardened digital banking microservices platform bu
 
 ## Tech Stack
 
-* **Language & Framework:** Java 17, Spring Boot 3.x, Spring Security 6, Spring Cloud (Gateway, Config, Eureka)
+* **Language & Framework:** Java 21, Spring Boot 3.3.2, Spring Security, Spring Cloud (Gateway, Config, Eureka)
 * **Security Standards:** OAuth2, OpenID Connect (OIDC), JSON Web Tokens (JWT), Keycloak
 * **Containerization:** Docker, Docker Compose
 
@@ -45,7 +45,7 @@ An enterprise-grade, security-hardened digital banking microservices platform bu
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com
+   git clone https://github.com/jaganhyd/microservices-security.git
    cd microservices-security
    ```
 
@@ -55,5 +55,5 @@ An enterprise-grade, security-hardened digital banking microservices platform bu
    ```
 
 3. **Obtain an Access Token & Call Protected Endpoints:**
-   * Request a JWT token from the Authorization Server (`/realms/master/protocol/openid-connect/token`).
-   * Pass the token in the `Authorization: Bearer <token>` header when calling `http://localhost:8072/bank/accounts/api/...`.
+   * Request a JWT token from the Authorization Server (`http://localhost:7080/realms/master/protocol/openid-connect/token`).
+   * Pass the token in the `Authorization: Bearer <token>` header when calling `http://localhost:8072/jbmicroservice/accounts-1/api/create`.
